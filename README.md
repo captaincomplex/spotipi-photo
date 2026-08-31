@@ -9,4 +9,4 @@ automatically.
 **Status:** Deployed
 **Stack:** Raspberry Pi · rpi-rgb-led-matrix · Python · Flask · osxphotos
 
-Part of the [slop.aero](https://github.com/captaincomplex/captaincomplex.github.io) projects site.
+Part of the [xpdr.aero](https://github.com/captaincomplex/captaincomplex.github.io) projects site.
