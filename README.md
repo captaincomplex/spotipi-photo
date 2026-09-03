@@ -1,4 +1,4 @@
-# Spotted
+# Spotipi + Photo
 
 A 64×64 LED-matrix display for the Raspberry Pi that cycles photos from an Apple
 Photos album and switches to Spotify cover art whenever music is playing. A web
