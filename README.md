@@ -248,6 +248,12 @@ spotipi-photo/
     └── test_icloud.py
 ```
 
+## Licence
+
+Free and open source under the [MIT licence](LICENSE). Spotipi Photo is built on
+[Spotipi](https://github.com/ryanwa18/spotipi) by Ryan Ward (MIT, copyright 2020).
+His copyright notice is kept in `LICENSE`, as that licence requires.
+
 ## Troubleshooting
 - **Web UI loads but panel won't change** → `sudo systemctl status spotipi` and
   `journalctl -u spotipi -n 50`. Confirm the `rgbmatrix` driver is installed.
