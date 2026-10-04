@@ -36,3 +36,7 @@ image/concepts/option1-from-photos/
 
 # Scratch
 _to_delete/
+
+# Your settings, written by the control panel. Not code: a missing file means
+# all defaults (python/state.py), so updates never touch it.
+config/state.json

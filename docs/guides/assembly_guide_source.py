@@ -307,16 +307,16 @@ def bolt(x, y, s=1.0, col=AMBER):
 
 
 def brandmark(x, y, size, dots=True, grid=16):
-    """The Spotipi Photo mark: an orange-sunset photograph, drawn as LEDs.
+    """The Spotipi Photo mark: a pink-dusk photograph, drawn as LEDs.
 
-    Colours come from image/logos/sunset/grid-<n>.json, written by
+    Colours come from image/logos/dusk/grid-<n>.json, written by
     image/build_logo_assets.py, so the guide still builds with nothing but
     reportlab. `dots` draws the matrix look; False draws square pixels, which
     is what the panel itself shows.
     """
     import json as _json
     gp = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..",
-                      "image", "logos", "sunset", f"grid-{grid}.json")
+                      "image", "logos", "dusk", f"grid-{grid}.json")
     cells = _json.load(open(gp))
     n = len(cells)
 

@@ -281,12 +281,12 @@
   <div class="card">
     <h2>Logo</h2>
     <div class="logos">
-      <form action="/logo" method="post"><button name="logo" value="sunset"
-        class="logo-btn {{ 'active' if s.logo=='sunset' else '' }}">
-        <img src="/logo/sunset.png" alt="">Orange sunset</button></form>
       <form action="/logo" method="post"><button name="logo" value="dusk"
         class="logo-btn {{ 'active' if s.logo=='dusk' else '' }}">
         <img src="/logo/dusk.png" alt="">Pink dusk</button></form>
+      <form action="/logo" method="post"><button name="logo" value="sunset"
+        class="logo-btn {{ 'active' if s.logo=='sunset' else '' }}">
+        <img src="/logo/sunset.png" alt="">Orange sunset</button></form>
     </div>
     <p class="pill" style="margin-top:.7rem">Shown on the panel when there's nothing else to show,
       and used as this page's icon. If the logo is on the panel now, it changes within a second.</p>

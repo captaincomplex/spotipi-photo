@@ -21,9 +21,9 @@ def pick(logo, px=64):
     return os.path.basename(logo_image_path({"logo": logo}, px, LOGOS_DIR, FALLBACK))
 
 
-def test_default_is_sunset():
-    assert state.DEFAULT_STATE["logo"] == "sunset" == state.LOGOS[0]
-    assert pick(None) == "sunset-64.png"
+def test_default_is_dusk():
+    assert state.DEFAULT_STATE["logo"] == "dusk" == state.LOGOS[0]
+    assert pick(None) == "dusk-64.png"
 
 
 def test_dusk_and_panel_size():
@@ -34,7 +34,7 @@ def test_dusk_and_panel_size():
 
 def test_bad_names_never_reach_the_filesystem():
     for bad in ("../../etc/passwd", "", "Sunset", 7):
-        assert pick(bad) == "sunset-64.png"
+        assert pick(bad) == "dusk-64.png"
 
 
 def test_missing_file_falls_back():
@@ -60,10 +60,24 @@ def test_web_logo_card(monkeypatch, tmp_path):
     assert 'value="sunset"' in page and 'value="dusk"' in page
     assert c.post("/logo", data={"logo": "dusk"}).status_code == 302
     assert state.read_state()["logo"] == "dusk"
-    c.post("/logo", data={"logo": "../../x"})
+    c.post("/logo", data={"logo": "sunset"})
     assert state.read_state()["logo"] == "sunset"
+    c.post("/logo", data={"logo": "../../x"})
+    assert state.read_state()["logo"] == "dusk"
     assert c.get("/favicon.ico").status_code == 200
     assert c.get("/logo/dusk.png").status_code == 200
     assert c.get("/logo/nope.png").status_code == 404
     assert c.get("/apple-touch-icon.png").status_code == 200
     assert c.get("/logo/sunset/small.png").status_code == 200
+
+
+def test_settings_are_readable_and_never_in_git(monkeypatch, tmp_path):
+    # The services run as root; the Pi's login must still be able to read the
+    # settings (git stash failed on "Permission denied" when it couldn't).
+    path = tmp_path / "state.json"
+    monkeypatch.setattr(state, "STATE_PATH", str(path))
+    state.write_state({"logo": "sunset"})
+    assert path.stat().st_mode & 0o777 == 0o644
+    # Settings aren't code: shipping them in git made every update fight them.
+    assert not os.path.exists(os.path.join(ROOT, "config", "state.json")) or \
+        "config/state.json" in open(os.path.join(ROOT, ".gitignore")).read().split()

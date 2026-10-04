@@ -150,7 +150,7 @@ display.
 Almost always power. Use the recommended 5V 4A supply plugged into the bonnet,
 never a phone charger, and lower the brightness. See [HARDWARE.md](../HARDWARE.md).
 
-### It shows the sunset logo and nothing else
+### It shows the logo and nothing else
 
 That's what it shows when there are no photos yet and nothing is playing. Add
 photos (User's Guide, Part 12) or play some music.
