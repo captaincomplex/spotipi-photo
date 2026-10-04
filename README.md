@@ -39,6 +39,8 @@ timer is enforced reliably by the daemon itself.
 
 | Document | For |
 |---|---|
+| [`docs/USER_GUIDE.md`](docs/USER_GUIDE.md) | **Start here.** Setting up on current Raspberry Pi OS, step by step: the Spotify app (API key), the LED driver, installing, photos, updating, and rebuilding an older Spotipi. |
+| [`docs/FAQ.md`](docs/FAQ.md) | Answers to common questions and fixes for common problems: missing album art, flicker, connecting, photos. |
 | [`docs/guides/SPOTIPI_BEGINNERS_GUIDE.md`](docs/guides/SPOTIPI_BEGINNERS_GUIDE.md) | Someone building this from nothing, who has never used a Pi. Every command in full, plus troubleshooting. |
 | [`docs/guides/spotipi_assembly_guide.pdf`](docs/guides/spotipi_assembly_guide.pdf) | The hardware, in 8 illustrated pages. Print it and put it next to the parts. Source: `assembly_guide_source.py`. |
 | [`HARDWARE.md`](HARDWARE.md) | What to buy and why, with dated prices, the power budget, and the Pi-model reasoning. |
