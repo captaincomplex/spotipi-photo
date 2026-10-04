@@ -9,10 +9,32 @@ file). Returns the current track's album-art URL and whether music is playing.
              "name": str|None, "artist": str|None }
 """
 
+import logging
+import time
+
 import spotipy
 from spotipy.oauth2 import SpotifyOAuth
 
 SCOPE = "user-read-currently-playing"
+
+log = logging.getLogger("spotipi")
+
+# A failing lookup is retried every few seconds; log each distinct problem at
+# most once per this many seconds so the journal says why album art is
+# missing without filling up.
+ERROR_LOG_INTERVAL = 600
+_last_logged = {}
+
+
+def _log_problem(err):
+    msg = "%s: %s" % (type(err).__name__, err)
+    now = time.monotonic()
+    if now - _last_logged.get(msg, -ERROR_LOG_INTERVAL) >= ERROR_LOG_INTERVAL:
+        _last_logged[msg] = now
+        log.warning("Spotify lookup failed (album art off until it works): %s", msg)
+        if "invalid_grant" in msg or "revoked" in msg.lower():
+            log.warning("The Spotify login has expired or been revoked -- run "
+                        "generate-token.sh again (see SPOTIFY_TOKEN_RENEWAL.txt).")
 
 # Cache one Spotify client per (username, token_path) so we don't rebuild
 # the auth object on every poll.
@@ -50,7 +72,8 @@ def getSongInfo(username, token_path):
         if images:
             result["image_url"] = images[-1]["url"]
         result["is_playing"] = bool(playback.get("is_playing"))
-    except Exception:
-        # token expired / no network / nothing playing -> treat as not playing
+    except Exception as err:
+        # token expired / no network -> treat as not playing, but say why
+        _log_problem(err)
         return result
     return result

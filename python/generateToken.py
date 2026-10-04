@@ -55,7 +55,10 @@ def main():
 
     # Prompts on the terminal: prints the authorise URL, waits for you to paste
     # back the full redirected URL, then writes the cache file.
-    token = auth.get_access_token(as_dict=False)
+    # check_cache=False: always do a fresh login. With an old cache file in
+    # place spotipy would first try to refresh it, and a login Spotify has
+    # revoked fails with "invalid_grant" before the URL is ever shown.
+    token = auth.get_access_token(as_dict=False, check_cache=False)
 
     if not token:
         print("No token returned -- the login did not complete.")
