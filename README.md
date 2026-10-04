@@ -210,7 +210,7 @@ spotipi-photo/
 ├── README.md
 ├── config/
 │   ├── rgb_options.ini        # matrix hardware (64×64 default)
-│   ├── state.json             # live state written by the web UI
+│   ├── state.json             # your settings, written by the web UI (not in git)
 │   ├── default.png            # shown when nothing else to display
 │   ├── spotipi.service        # display daemon unit
 │   ├── spotipi-client.service # web UI unit

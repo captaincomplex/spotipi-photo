@@ -5,10 +5,10 @@ build_logo_assets.py -- the production logo: every file the project ships.
 Two logos, both drawn from the owner's own photos in the option-1 style
 (stylise_candidates.py does the drawing):
 
-  sunset  -- photo 01, orange sunset; the sun setting behind the ridges.
-             The DEFAULT: it is what config/default.png, the app icons,
-             the favicon, the wordmark and the PDF guide use.
   dusk    -- photo 10, pink dusk; the whole sun just clear of the ridges.
+             The DEFAULT (since October 2026): it is what config/default.png, the app
+             icons, the favicon and the wordmark use.
+  sunset  -- photo 01, orange sunset; the sun setting behind the ridges.
              Chosen instead from the web control panel ("Logo" card).
 
 For each logo this writes image/logos/<key>/:
@@ -37,12 +37,12 @@ import stylise_candidates as sc      # noqa: E402
 import compare_finalists as cf       # noqa: E402
 
 CONFIG = os.path.abspath(os.path.join(HERE, "..", "config"))
-DEFAULT = "sunset"
+DEFAULT = "dusk"
 LOGOS = {
-    "sunset": dict(photo="01-orange-sunset-ridges-sea", change=None,
-                   title="Orange sunset"),
     "dusk":   dict(photo="10-pink-dusk-mountains", change=dict(cy=.36, behind=False),
                    title="Pink dusk"),
+    "sunset": dict(photo="01-orange-sunset-ridges-sea", change=None,
+                   title="Orange sunset"),
 }
 INK = (0x1A, 0x1C, 0x21); MUTED = (0x6B, 0x70, 0x78)
 FONT_B = "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf"

@@ -4,6 +4,10 @@ state.py -- shared, atomic read/write of the live display state.
 Both the display daemon and the web app read and write config/state.json.
 The daemon polls it every loop, so changes from the web UI take effect
 immediately with no service restart.
+
+state.json is not part of the code: it is not in git, and a missing file just
+means every setting is at its default (DEFAULT_STATE below). So `git pull`
+never has to touch it, and an update can never overwrite your settings.
 """
 
 import json
@@ -58,13 +62,13 @@ DEFAULT_STATE = {
 
     # Which logo the panel shows when there is nothing else to show, and the
     # web panel uses as its icon. Files: config/logos/<logo>-64.png / -32.png.
-    "logo": "sunset",
+    "logo": "dusk",
 }
 
 # The logos on offer (image/build_logo_assets.py makes them). First = default.
-#   sunset -- orange sunset, the sun setting behind the ridges
 #   dusk   -- pink dusk, the whole sun just clear of the ridges
-LOGOS = ("sunset", "dusk")
+#   sunset -- orange sunset, the sun setting behind the ridges
+LOGOS = ("dusk", "sunset")
 
 
 def read_state():
@@ -86,6 +90,10 @@ def write_state(state):
     try:
         with os.fdopen(fd, "w") as f:
             json.dump(state, f, indent=2)
+        # mkstemp makes the file readable by its owner only, and the services
+        # run as root -- so without this the Pi's own login couldn't read its
+        # settings (that is what broke `git stash` on the Pi).
+        os.chmod(tmp, 0o644)
         os.replace(tmp, STATE_PATH)   # atomic on POSIX
     finally:
         if os.path.exists(tmp):

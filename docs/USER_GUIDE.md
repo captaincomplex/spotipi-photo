@@ -343,7 +343,7 @@ attention**.
 
 ## 10. Check it's working
 
-About a minute after the restart, the panel shows the Spotipi Photo sunset
+About a minute after the restart, the panel shows the Spotipi Photo pink dusk
 logo (or your photos, once you've added some). Play something on Spotify — the
 album cover should appear within about ten seconds.
 
@@ -382,8 +382,8 @@ On your phone or computer, on the same Wi-Fi, open **<http://spotipi.local>**.
   your latitude and longitude. No internet service involved.
 - **Add photos** — upload from the device you're holding.
 - **iCloud Shared Album** — keep the Pi in step with a shared album.
-- **Logo** — choose the sunset or dusk logo for when there's nothing else to
-  show.
+- **Logo** — the logo for when there's nothing else to show: pink dusk (the
+  default) or orange sunset.
 
 ---
 
@@ -443,7 +443,9 @@ ssh -t pi@spotipi.local 'cd ~/spotipi-photo && git pull && sudo systemctl restar
 ```
 
 `git pull` fetches the latest version from GitHub; your settings, photos and
-Spotify login are not touched.
+Spotify login are not touched. (The control panel's settings live in
+`config/state.json`, which isn't part of what GitHub holds, so an update can't
+overwrite it.)
 
 > If `git pull` complains that `config/rgb_options.ini` would be overwritten,
 > your panel settings differ from the published ones (that's normal). Run
