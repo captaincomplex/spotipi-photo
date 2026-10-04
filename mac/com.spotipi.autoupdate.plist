@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!-- Template: install_mac.sh fills in __MAC_DIR__ and copies the result to
+     ~/Library/LaunchAgents/. -->
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.spotipi.autoupdate</string>
+    <key>ProgramArguments</key>
+    <array>
+        <string>/bin/bash</string>
+        <string>__MAC_DIR__/auto_update.sh</string>
+    </array>
+    <key>StartInterval</key>
+    <integer>21600</integer>
+    <key>RunAtLoad</key>
+    <true/>
+    <key>StandardOutPath</key>
+    <string>/tmp/spotipi-update.launchd.log</string>
+    <key>StandardErrorPath</key>
+    <string>/tmp/spotipi-update.launchd.log</string>
+</dict>
+</plist>
