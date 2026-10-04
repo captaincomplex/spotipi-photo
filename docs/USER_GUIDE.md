@@ -428,6 +428,19 @@ link can see the album, so use one just for the panel.
    launchctl load ~/Library/LaunchAgents/com.spotipi.albumsync.plist
    ```
 
+The sync runs in the background, where it can't stop to ask you anything. So
+connect once by hand, using **exactly** the login you gave the setup (the
+same name or the same address), and answer `yes` if asked whether to trust the
+Pi:
+
+```
+ssh pi@spotipi.local 'echo connected'
+```
+
+Your Mac remembers the Pi separately under each name and address. If you
+connected as `pi@spotipi.local` but gave the setup `pi@192.168.1.50`, the
+background sync still refuses to connect.
+
 Removing a photo from the album removes it from the panel at the next sync. If
 the scheduled sync finds 0 photos but running it by hand works, see the
 [FAQ](FAQ.md#the-mac-sync-finds-0-photos).
@@ -446,6 +459,18 @@ ssh -t pi@spotipi.local 'cd ~/spotipi-photo && git pull && sudo systemctl restar
 Spotify login are not touched. (The control panel's settings live in
 `config/state.json`, which isn't part of what GitHub holds, so an update can't
 overwrite it.)
+
+> **Installed before October 2026?** Back then the control panel's settings
+> file was part of the download, so the first update after that date has to
+> set it aside and put it back. Do this once instead of the command above:
+>
+> ```
+> ssh -t pi@spotipi.local 'cd ~/spotipi-photo && sudo cp config/state.json ~/state.json.keep && sudo chown $USER: ~/state.json.keep && git checkout -- config/state.json && git pull && cp ~/state.json.keep config/state.json && sudo systemctl restart spotipi spotipi-client spotipi-icloud'
+> ```
+>
+> You need it if a plain update says `config/state.json` would be
+> overwritten, or `Permission denied` about that file. A copy of your settings
+> stays in `state.json.keep` in your home folder on the Pi.
 
 > If `git pull` complains that `config/rgb_options.ini` would be overwritten,
 > your panel settings differ from the published ones (that's normal). Run
@@ -493,11 +518,19 @@ across in Part 7. Your old Spotify app still works — reuse its Client ID,
 Secret and Redirect URI from `spotipi_env.conf` — but expect to do the login in
 Part 8 again.
 
-If the Mac photo sync was set up before, start it again once the Pi is running:
+If the Mac photo sync was set up before, start it again once the Pi is running.
+The rebuilt Pi has a new security fingerprint, so first clear the old one and
+connect once by hand, using the login in `mac/local.conf` (name or address),
+answering `yes` when asked:
 
 ```
+ssh-keygen -R spotipi.local
+ssh pi@spotipi.local 'echo connected'
 launchctl load ~/Library/LaunchAgents/com.spotipi.albumsync.plist
 ```
+
+If `mac/local.conf` uses the Pi's address instead, put the address in the first
+two lines in place of `spotipi.local`.
 
 ---
 

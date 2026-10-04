@@ -236,9 +236,29 @@ Give Python **Full Disk Access**: System Settings → Privacy & Security → Ful
 Disk Access → **+**, then press `Cmd + Shift + G` and add
 `/Library/Frameworks/Python.framework/Versions/<version>/Resources/Python.app`.
 
+If the log ends with `Host key verification failed` or `code 255`, the
+background sync can't connect: see the next question.
+
 Also check the sync is switched on:
 `launchctl load ~/Library/LaunchAgents/com.spotipi.albumsync.plist`
 and look at its log: `tail /tmp/spotipi-albumsync.log`.
+
+### The Mac sync log says "Host key verification failed" or "code 255"
+
+The Mac hasn't been told it can trust the Pi under the name or address the
+sync uses. That happens after the Pi is rebuilt, or when you've only ever
+connected by a different name (your Mac remembers `spotipi.local` and
+`192.168.1.50` separately). Look up which one the sync uses:
+`grep PI= mac/local.conf` in the project folder on the Mac. Then connect
+once by hand with exactly that, answering `yes` if asked:
+
+```
+ssh pi@192.168.1.50 'echo connected'
+launchctl start com.spotipi.albumsync
+```
+
+If it warns that the identification has *changed*, clear the old record first
+with `ssh-keygen -R 192.168.1.50` (only if you know the Pi was rebuilt).
 
 ### Photos look letterboxed or cropped strangely
 
@@ -278,6 +298,13 @@ ssh -t pi@spotipi.local 'cd ~/spotipi-photo && git pull && sudo systemctl restar
 
 Your settings, photos and Spotify login are kept. If `git pull` complains about
 `rgb_options.ini`, see User's Guide, Part 13.
+
+### Updating says `config/state.json` would be overwritten, or "Permission denied"
+
+Your Pi was installed before October 2026, when the control panel's settings
+file was part of the download. It's a one-off: use the command under
+"Installed before October 2026?" in User's Guide, Part 13. After that, plain
+updates work.
 
 ### Can I use a 32×32 or 64×32 panel?
 
