@@ -405,6 +405,12 @@ library. Photos are cropped square and resized on the Pi for you.
 Photos you add or remove in the album follow on the panel. Anyone with that
 link can see the album, so use one just for the panel.
 
+> **Only older shared albums work.** The link must start
+> `https://www.icloud.com/sharedalbum/`. Apple's newer shared albums give links
+> starting `https://photos.icloud.com/shared/album/`, and Apple doesn't yet let
+> other devices read those — the control panel says so if you paste one. For
+> those, use **Add photos** or the Mac sync below.
+
 ### From Apple Photos on a Mac, automatically
 1. In **Photos** on the Mac, create an album called exactly **`Spotipi`**.
 2. Download the project to the Mac and run its setup:
