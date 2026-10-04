@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!-- Template: install_mac.sh fills in __PYTHON3__, __MAC_DIR__, __PI_HOST__
+     and __PI_DIR__ and copies the result to ~/Library/LaunchAgents/. -->
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.spotipi.albumsync</string>
+
+    <key>ProgramArguments</key>
+    <array>
+        <string>__PYTHON3__</string>
+        <string>__MAC_DIR__/sync_album.py</string>
+        <string>--album</string>
+        <string>Spotipi</string>
+        <string>--pi-host</string>
+        <string>__PI_HOST__</string>
+        <string>--pi-dir</string>
+        <string>__PI_DIR__/photos</string>
+        <string>--size</string>
+        <string>64</string>
+    </array>
+
+    <key>StartInterval</key>
+    <integer>300</integer>
+
+    <key>RunAtLoad</key>
+    <true/>
+
+    <key>StandardOutPath</key>
+    <string>/tmp/spotipi-albumsync.log</string>
+    <key>StandardErrorPath</key>
+    <string>/tmp/spotipi-albumsync.err</string>
+</dict>
+</plist>
