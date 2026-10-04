@@ -24,6 +24,14 @@ class TestParseToken(unittest.TestCase):
                     "B0AbcDef123"):
             self.assertEqual(ia.parse_token(url), "B0AbcDef123")
 
+    def test_newer_album_links_get_a_clear_explanation(self):
+        for url in ("https://photos.icloud.com/shared/album/042s37AbcDef123XyZ",
+                    "photos.icloud.com/shared/album/042s37AbcDef123XyZ/"):
+            with self.assertRaises(ia.AlbumError) as cm:
+                ia.parse_token(url)
+            self.assertIn("newer shared albums", str(cm.exception))
+            self.assertIn("Add photos", str(cm.exception))
+
     def test_rejects_rubbish(self):
         for bad in ("", None, "https://example.com/album", "short", "has spaces here"):
             with self.assertRaises(ia.AlbumError):

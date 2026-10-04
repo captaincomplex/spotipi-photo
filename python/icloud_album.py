@@ -63,6 +63,17 @@ def parse_token(url):
     url = (url or "").strip()
     if not url:
         raise AlbumError("No album link set.")
+    if "/shared/album/" in url:
+        # Apple's newer shared albums (links like
+        # https://photos.icloud.com/shared/album/<code>) are not served by the
+        # sharedstreams API this module uses: it answers 404. No public way to
+        # read them was known as of October 2026, so say so plainly.
+        raise AlbumError(
+            "This is one of Apple's newer shared albums (a photos.icloud.com/"
+            "shared/album/ link). Apple doesn't yet let other devices read "
+            "these, so the Pi can't sync it. Use 'Add photos' or the Mac's "
+            "Apple Photos sync instead. Older albums, with links starting "
+            "https://www.icloud.com/sharedalbum/, still work.")
     if "#" in url:
         url = url.split("#", 1)[1]
     url = url.strip().strip("/")

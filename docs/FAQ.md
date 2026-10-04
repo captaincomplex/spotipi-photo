@@ -211,6 +211,17 @@ Use **Add photos** in the control panel from any phone or computer, or an
 **iCloud Shared Album** (User's Guide, Part 12). Windows users can also use
 `tools/prepare_photos.py` for big batches.
 
+### The iCloud card says my link is one of "Apple's newer shared albums"
+
+Apple now has two kinds of shared album. Older ones have links starting
+`https://www.icloud.com/sharedalbum/#…` and work with Spotipi Photo. Newer ones
+have links starting `https://photos.icloud.com/shared/album/…`; when the Pi asks
+iCloud for one of those, iCloud answers "not found". As of October 2026 there's
+no published way for other devices to read them — other photo-frame products
+hit the same problem. Use **Add photos** in the control panel, or the Mac's
+Apple Photos sync, instead. If Apple opens the newer albums up, this will be
+updated.
+
 ### I deleted a photo from the album but it's still on the panel
 
 The Mac sync and iCloud sync remove it at their next run — every five minutes
