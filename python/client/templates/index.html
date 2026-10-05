@@ -286,6 +286,31 @@
     </form>
   </div>
 
+  <!-- UPDATES -->
+  <div class="card" id="updates">
+    <h2>Updates</h2>
+    {% set u = dash["update"] %}
+    <p style="margin:.2rem 0 .6rem">This Pi: <strong id="up_current">{{ u.current or "–" }}</strong>
+      &middot; newest: <strong id="up_latest">{{ u.latest or "–" }}</strong></p>
+    <p class="pill" id="up_line">{% if u.updating %}Updating to {{ u.updating }}… back in a minute or two.{% elif u.error %}{{ u.error }}{% elif u.available %}{{ u.available }} is ready to install.{% elif u.current %}Up to date.{% else %}Not checked yet.{% endif %}{% if u.last %} {{ u.last }}{% endif %}</p>
+    <div class="row" style="margin-top:.6rem">
+      {% if u.available and not u.updating %}
+      <form action="/update/now" method="post"><input type="submit" class="save" value="Update now to {{ u.available }}"></form>
+      {% endif %}
+      <form action="/update/check" method="post"><input type="submit" value="Check now"></form>
+    </div>
+    <form action="/update/auto" method="post" style="margin-top:.7rem">
+      <div class="switch">
+        <input type="checkbox" id="auto_update" name="auto_update" onchange="this.form.submit()"
+               {{ 'checked' if s.auto_update else '' }}>
+        <label for="auto_update" style="margin:0">Install new releases automatically, overnight</label>
+      </div>
+    </form>
+    <p class="pill" style="margin-top:.6rem">Checked every night between 04:00 and 05:00. Your photos,
+      settings and Spotify login are never touched, and if a new version doesn't start properly the
+      Pi goes back to the one before.</p>
+  </div>
+
   <!-- LOGO -->
   <div class="card">
     <h2>Logo</h2>

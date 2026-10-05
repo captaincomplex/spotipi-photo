@@ -63,6 +63,9 @@ DEFAULT_STATE = {
     # Which logo the panel shows when there is nothing else to show, and the
     # web panel uses as its icon. Files: config/logos/<logo>-64.png / -32.png.
     "logo": "dusk",
+
+    # Install new releases by itself, overnight (python/updater.py).
+    "auto_update": True,
 }
 
 # The logos on offer (image/build_logo_assets.py makes them). First = default.

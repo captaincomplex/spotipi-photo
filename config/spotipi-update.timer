@@ -1,0 +1,12 @@
+[Unit]
+Description=Spotipi Photo: nightly update check
+
+[Timer]
+# Between 04:00 and 05:00 (Equalize, if it shares the Pi, checks 03:30-04:30).
+# Persistent: if the Pi was off then, it checks soon after it next starts.
+OnCalendar=*-*-* 04:00
+RandomizedDelaySec=1h
+Persistent=true
+
+[Install]
+WantedBy=timers.target

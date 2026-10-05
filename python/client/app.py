@@ -139,7 +139,56 @@ def dashboard():
         "timer_remaining_s": remaining,
         "icloud": read_icloud_status(),
         "equalize": equalize_info(),
+        "update": update_info(),
     }
+
+
+# ------------------------------------------------------------------ updates
+# python/updater.py does the work, as its own little systemd job (it
+# restarts this control panel on the way); this only reads what it wrote and
+# starts it.
+UPDATER = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "updater.py"))
+UPDATE_STATUS = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "config", "update.json"))
+
+
+def update_info():
+    import json
+    try:
+        with open(UPDATE_STATUS) as f:
+            return json.load(f) or {}
+    except (OSError, ValueError):
+        return {}
+
+
+def _run_updater(action):
+    import subprocess
+    try:
+        subprocess.Popen(["systemd-run", "--no-block", "--collect", "--quiet",
+                          "--unit=spotipi-update-%s-%d" % (action, int(time.time())),
+                          sys.executable, UPDATER, action])
+        return True
+    except OSError:
+        return False
+
+
+@app.route("/update/check", methods=["POST"])
+def update_check():
+    _run_updater("check")
+    return redirect(url_for("index"))
+
+
+@app.route("/update/now", methods=["POST"])
+def update_now():
+    _run_updater("apply")
+    return redirect(url_for("index"))
+
+
+@app.route("/update/auto", methods=["POST"])
+def update_auto():
+    state = read_state()
+    state["auto_update"] = request.form.get("auto_update") == "on"
+    write_state(state)
+    return redirect(url_for("index"))
 
 
 @app.route("/")

@@ -156,6 +156,9 @@ else
   systemctl restart spotipi
 fi
 
+# Updates from GitHub releases: a check every night (python/updater.py).
+bash "${INSTALL_PATH}/tools/install_updater.sh"
+
 # ---------------------------------------------------------------------------
 echo
 echo "Done."

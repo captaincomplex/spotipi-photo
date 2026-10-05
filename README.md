@@ -180,23 +180,35 @@ skipped with a warning — open them once in Photos to download.
 
 ---
 
-## Automatic updates
-`mac/auto_update.sh` (run by `com.spotipi.autoupdate.plist` every 6 hours) watches
-`spotipi-photo-latest.zip` next to this folder in Dropbox. When a new version appears it
-pushes the code to the Pi, restarts the services, health-checks them, and rolls back
-automatically if they fail to start. It never touches the Pi's live config, photos, or
-token. It reads the Pi's address from `mac/local.conf`.
+## Updates
 
-One-time Pi setup, so the Mac can restart the services without a password prompt:
+The Pi updates itself from this project's **releases** on GitHub: numbered,
+tested versions (v1.1.0), never whatever the code is that day.
+`python/updater.py` checks every night between 04:00 and 05:00
+(`spotipi-update.timer`). The control panel's **Updates** card shows this
+Pi's version and the newest, with **Update now**, **Check now** and
+**Install new releases automatically** (on unless you turn it off).
 
-    sed "s/__USER__/$USER/" spotipi-update.sudoers | sudo tee /etc/sudoers.d/spotipi-update >/dev/null
-    sudo chmod 440 /etc/sudoers.d/spotipi-update
+An update moves the program forward to that release and restarts it. It
+never touches photos, settings, the Spotify token or the panel's own
+settings. If any program file has been edited on the Pi it stops and says
+which, rather than overwrite it. If the new version doesn't start
+properly, the Pi goes back to the one before.
 
-Then on the Mac:
+Set up by `install_pi.sh`, by Equalize's installer when the two share a Pi,
+or on its own with `sudo bash tools/install_updater.sh`. Log:
+`journalctl -u 'spotipi-update*'`.
 
-    launchctl load ~/Library/LaunchAgents/com.spotipi.autoupdate.plist
+**Releasing** (for whoever makes the change): merge to `main`, then tag that
+commit with the next version and push the tag, e.g.
+`git tag -a v1.1.0 -m "what changed" && git push origin v1.1.0`. Pis install
+it that night. Nothing reaches them without a tag.
 
-Log: `/tmp/spotipi-update.log`
+**The older Mac route** (`mac/auto_update.sh`, which copied a Dropbox zip to
+the Pi) is replaced by this. If it is still set up on your Mac, turn it off,
+as its copies would count as edits on the Pi:
+`launchctl unload ~/Library/LaunchAgents/com.spotipi.autoupdate.plist`.
+The files are kept in `mac/` for now.
 
 ## Publishing
 `publish.sh` (on the Mac) copies this folder to a fresh clone of
@@ -234,7 +246,7 @@ spotipi-photo/
 ├── mac/
 │   ├── sync_album.py          # Apple Photos → Pi sync (Mac only)
 │   ├── install_mac.sh         # sets up the sync; writes local.conf and the LaunchAgents
-│   ├── auto_update.sh         # pushes new releases to the Pi
+│   ├── auto_update.sh         # the older Mac update route (replaced by python/updater.py)
 │   ├── com.spotipi.albumsync.plist    # LaunchAgent template
 │   └── com.spotipi.autoupdate.plist   # LaunchAgent template
 ├── tools/
