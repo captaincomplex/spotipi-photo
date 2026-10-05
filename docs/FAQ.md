@@ -110,7 +110,7 @@ The Pi is switching the panel's pins faster than the panel can follow. Raise
 `gpio_slowdown` by one (a Pi 4 usually needs `4`, a Pi 3 `2`):
 
 ```
-ssh pi@spotipi.local "sed -i 's/^gpio_slowdown = .*/gpio_slowdown = 4/' ~/spotipi-photo/config/rgb_options.ini"
+ssh pi@spotipi.local 'cd ~/spotipi-photo && python3 tools/panel_setting.py gpio_slowdown=4'
 ssh -t pi@spotipi.local 'sudo systemctl restart spotipi'
 ```
 
@@ -135,15 +135,16 @@ In order:
 bonnet. Without the wire, set it back to `adafruit-hat` and restart:
 
 ```
-ssh pi@spotipi.local "sed -i 's/^hardware_mapping = .*/hardware_mapping = adafruit-hat/' ~/spotipi-photo/config/rgb_options.ini"
+ssh pi@spotipi.local 'cd ~/spotipi-photo && python3 tools/panel_setting.py hardware_mapping=adafruit-hat'
 ssh -t pi@spotipi.local 'sudo systemctl restart spotipi'
 ```
 
 ### Only part of the panel lights up, or the picture is squashed
 
-`rows` and `columns` in `~/spotipi-photo/config/rgb_options.ini` don't match
-your panel: 64×64 is `64`/`64`, 32×32 is `32`/`32`. Fix them and restart the
-display.
+`rows` and `columns` don't match your panel: 64×64 is `64`/`64`, 32×32 is
+`32`/`32`. Set them with
+`ssh pi@spotipi.local 'cd ~/spotipi-photo && python3 tools/panel_setting.py rows=32 columns=32'`
+and restart the display.
 
 ### The colours are wrong along one edge, or it dims on bright pictures
 
@@ -297,7 +298,8 @@ ssh -t pi@spotipi.local 'cd ~/spotipi-photo && git pull && sudo systemctl restar
 ```
 
 Your settings, photos and Spotify login are kept. If `git pull` complains about
-`rgb_options.ini`, see User's Guide, Part 13.
+`rgb_options.ini`, see User's Guide, Part 13: it's a one-off move of your
+panel settings into a file of your own.
 
 ### Updating says `config/state.json` would be overwritten, or "Permission denied"
 

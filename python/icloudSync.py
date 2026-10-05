@@ -20,7 +20,7 @@ import logging
 
 sys.dont_write_bytecode = True
 
-from state import read_state, write_icloud_status          # noqa: E402
+from state import config_paths, read_state, write_icloud_status          # noqa: E402
 import icloud_album                                        # noqa: E402
 
 DIR = os.path.dirname(os.path.abspath(__file__))
@@ -39,7 +39,7 @@ def panel_size():
     """Match the panel: a 32x32 shouldn't be fed 64px images."""
     try:
         cfg = configparser.ConfigParser()
-        cfg.read(CONFIG_PATH)
+        cfg.read(config_paths(CONFIG_PATH))
         return max(int(cfg["DEFAULT"]["rows"]), int(cfg["DEFAULT"]["columns"]))
     except Exception:
         return 64

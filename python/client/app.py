@@ -22,7 +22,7 @@ from flask import (Flask, render_template, request, redirect, url_for,
 
 # allow importing state.py from ../ (the python/ folder)
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
-from state import (read_state, write_state, reset_timer,  # noqa: E402
+from state import (config_paths, read_state, write_state, reset_timer,  # noqa: E402
                    read_status, read_icloud_status, PREVIEW_PATH, LOGOS)
 import icloud_album                                       # noqa: E402
 
@@ -56,7 +56,7 @@ def panel_size():
     try:
         import configparser
         cfg = configparser.ConfigParser()
-        cfg.read(CONFIG_INI)
+        cfg.read(config_paths(CONFIG_INI))
         return max(int(cfg["DEFAULT"]["rows"]), int(cfg["DEFAULT"]["columns"]))
     except Exception:
         return 64
@@ -401,4 +401,7 @@ def status():
 
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=80)
+    # Port 80 normally. When Equalize shares this Pi, its installer sets
+    # SPOTIPI_PORT=8081 and puts a "front door" on port 80 that sends
+    # spotipi.local here and equalize.local to Equalize.
+    app.run(host="0.0.0.0", port=int(os.environ.get("SPOTIPI_PORT", "80")))

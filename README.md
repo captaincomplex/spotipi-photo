@@ -86,7 +86,7 @@ release. Older releases (Buster, Bullseye) are out of support and not tested.
    - `spotipi-icloud` → `python/icloudSync.py` (idle until you give it a shared-album link)
 6. Open **http://spotipi.local** (or the Pi's IP address) in any browser on your network.
 
-Set your panel details in `config/rgb_options.ini` and `sudo systemctl restart spotipi`
+Set your panel details with `python3 tools/panel_setting.py rows=64 columns=64 ...` (kept in `config/rgb_options.local.ini`, which updates never touch) and `sudo systemctl restart spotipi`
 after any change. **64×64, 32×32 and 64×32 panels are all supported** — set `rows` and
 `columns` to match, and pass the same `--size` when you sync photos. `hardware_mapping`
 stays `adafruit-hat` unless you have soldered the GPIO4→GPIO18 PWM jumper, in which case
@@ -209,7 +209,7 @@ spotipi-photo/
 ├── SPOTIFY_TOKEN_RENEWAL.txt  # how to refresh the Spotify token (~every 6 months)
 ├── README.md
 ├── config/
-│   ├── rgb_options.ini        # matrix hardware (64×64 default)
+│   ├── rgb_options.ini        # matrix hardware defaults (64×64); yours go in rgb_options.local.ini
 │   ├── state.json             # your settings, written by the web UI (not in git)
 │   ├── default.png            # shown when nothing else to display
 │   ├── spotipi.service        # display daemon unit
@@ -262,7 +262,7 @@ His copyright notice is kept in `LICENSE`, as that licence requires.
   Spotify app's owner also needs Premium.
 - **Photos not updating** → on the Mac check `/tmp/spotipi-albumsync.log` and that
   `ssh pi@spotipi.local` works without a password.
-- **Panel flickers** → raise `gpio_slowdown` to 3 or 4 in `rgb_options.ini`, restart spotipi.
+- **Panel flickers** → `python3 tools/panel_setting.py gpio_slowdown=4`, restart spotipi.
 - **Panel blank / `Permission denied: state.json` or `default.png`** → the LED
   library drops root to the `daemon` user unless told not to. `displaySpotipi.py` sets
   `options.drop_privileges = False` so the daemon stays root.
