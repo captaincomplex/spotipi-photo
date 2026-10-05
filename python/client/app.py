@@ -102,6 +102,24 @@ def uptime_seconds():
         return None
 
 
+# Equalize (the LED equaliser) can share this Pi and this panel. Its switch
+# that hands the panel between the two is how we know it's here.
+EQUALIZE_PANEL = os.environ.get("EQUALIZE_PANEL", "/usr/local/bin/equalize-panel")
+
+
+def equalize_info():
+    """Is Equalize on this Pi too, and does it have the panel just now?"""
+    if not os.path.exists(EQUALIZE_PANEL):
+        return {"installed": False}
+    import subprocess
+    try:
+        active = subprocess.run(["systemctl", "is-active", "--quiet", "equalize.service"],
+                                timeout=3).returncode == 0
+    except Exception:
+        active = False
+    return {"installed": True, "active": active, "url": "http://equalize.local/"}
+
+
 def dashboard():
     """Everything the live dashboard needs, in one place."""
     st = read_status()
@@ -120,6 +138,7 @@ def dashboard():
         "uptime_s": uptime_seconds(),
         "timer_remaining_s": remaining,
         "icloud": read_icloud_status(),
+        "equalize": equalize_info(),
     }
 
 
