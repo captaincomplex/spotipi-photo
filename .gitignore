@@ -40,3 +40,6 @@ _to_delete/
 # Your settings, written by the control panel. Not code: a missing file means
 # all defaults (python/state.py), so updates never touch it.
 config/state.json
+
+# This Pi's own panel settings, read over config/rgb_options.ini; updates never touch it
+config/rgb_options.local.ini

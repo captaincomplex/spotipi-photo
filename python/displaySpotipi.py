@@ -32,7 +32,7 @@ from rgbmatrix import RGBMatrix, RGBMatrixOptions
 import configparser
 
 from getSongInfo import getSongInfo
-from state import read_state, write_status, PREVIEW_PATH
+from state import config_paths, read_state, write_status, PREVIEW_PATH
 from display_logic import compute_effective, effective_brightness, logo_image_path
 
 STATUS_WRITE_SECONDS = 10.0    # heartbeat: refresh status.json at least this often
@@ -55,7 +55,7 @@ log = logging.getLogger("spotipi")
 
 def load_matrix():
     config = configparser.ConfigParser()
-    config.read(os.path.abspath(CONFIG_PATH))
+    config.read(config_paths(os.path.abspath(CONFIG_PATH)))
     d = config["DEFAULT"]
     options = RGBMatrixOptions()
     options.rows = int(d["rows"])

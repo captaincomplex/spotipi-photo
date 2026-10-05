@@ -168,3 +168,11 @@ def read_status():
         return data
     except (FileNotFoundError, json.JSONDecodeError, PermissionError, OSError):
         return {}
+
+
+def config_paths(ini_path):
+    """rgb_options.ini, then this Pi's own rgb_options.local.ini read over the
+    top of it. The local file is never in git, so an update can't clash with
+    the changes in it (wiring, flicker fix, panel size)."""
+    root, ext = os.path.splitext(ini_path)
+    return [ini_path, root + ".local" + ext]

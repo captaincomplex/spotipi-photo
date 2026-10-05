@@ -253,8 +253,7 @@ ssh -t pi@spotipi.local 'sudo reboot'
 ssh pi@spotipi.local 'git clone https://github.com/captaincomplex/spotipi-photo.git ~/spotipi-photo'
 ```
 
-Now tell it about your panel. The settings live in
-`~/spotipi-photo/config/rgb_options.ini`. The three that matter:
+Now tell it about your panel. The three settings that matter:
 
 | Setting | What to set |
 |---|---|
@@ -265,12 +264,12 @@ Now tell it about your panel. The settings live in
 For example, a 64×64 panel on a Pi 4 with the quality wire:
 
 ```
-ssh pi@spotipi.local "cd ~/spotipi-photo/config && sed -i 's/^hardware_mapping = .*/hardware_mapping = adafruit-hat-pwm/; s/^gpio_slowdown = .*/gpio_slowdown = 4/' rgb_options.ini && grep -E '^(rows|columns|hardware_mapping|gpio_slowdown)' rgb_options.ini"
+ssh pi@spotipi.local 'cd ~/spotipi-photo && python3 tools/panel_setting.py hardware_mapping=adafruit-hat-pwm gpio_slowdown=4'
 ```
 
-It prints the four settings so you can check them. To edit by hand instead:
-`ssh -t pi@spotipi.local 'nano ~/spotipi-photo/config/rgb_options.ini'`, change
-the values, then `Ctrl+O`, Enter, `Ctrl+X`.
+It prints the settings the panel will use, marking the ones you've changed
+`(yours)`. Your changes are kept in `config/rgb_options.local.ini`, a file of
+your own that updates never touch. (A 32×32 panel adds `rows=32 columns=32`.)
 
 > **Flickering bands or a broken patch on the panel** later on? That's
 > `gpio_slowdown` too low — raise it by one. See the [FAQ](FAQ.md#the-panel-flickers-or-shows-bright-bands-in-one-area).
@@ -473,9 +472,15 @@ overwrite it.)
 > stays in `state.json.keep` in your home folder on the Pi.
 
 > If `git pull` complains that `config/rgb_options.ini` would be overwritten,
-> your panel settings differ from the published ones (that's normal). Run
-> `ssh pi@spotipi.local 'cd ~/spotipi-photo && git stash && git pull && git stash pop'`
-> — it sets your settings aside, updates, then puts them back.
+> your panel settings were changed in that file, as the guide used to say.
+> Move them into your own file once; this is what the command does, for the
+> usual Pi 4 settings (change the values to yours):
+>
+> ```
+> ssh -t pi@spotipi.local 'cd ~/spotipi-photo && cp config/rgb_options.ini ~/rgb_options.ini.keep && git checkout -- config/rgb_options.ini && git pull && python3 tools/panel_setting.py hardware_mapping=adafruit-hat-pwm gpio_slowdown=4 && sudo systemctl restart spotipi spotipi-client'
+> ```
+>
+> A copy of the old file stays in `rgb_options.ini.keep` in your home folder.
 
 **Every six months or so** Spotify ends the login and album art stops: repeat
 Part 8, then `ssh -t pi@spotipi.local 'sudo systemctl restart spotipi'`.
@@ -495,7 +500,7 @@ its username):
 ```
 mkdir -p ~/spotipi-backup
 ssh pi@spotipi.local 'tar czf - -C ~ .' > ~/spotipi-backup/pi-home.tar.gz
-ssh pi@spotipi.local 'cat ~/spotipi-photo/config/rgb_options.ini' > ~/spotipi-backup/rgb_options.ini
+ssh pi@spotipi.local 'cat ~/spotipi-photo/config/rgb_options.ini ~/spotipi-photo/config/rgb_options.local.ini 2>/dev/null' > ~/spotipi-backup/rgb_options.ini
 ssh -t pi@spotipi.local 'sudo cat /etc/systemd/system/spotipi.service.d/spotipi_env.conf' > ~/spotipi-backup/spotipi_env.conf
 ls -lh ~/spotipi-backup
 ```
