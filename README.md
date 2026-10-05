@@ -96,6 +96,10 @@ use `adafruit-hat-pwm`. Raise `gpio_slowdown` if the panel tears.
 Install Spotipi Photo first, then Equalize; Equalize's installer notices and the two take
 turns (by default Equalize while AirPlay music plays, Spotipi Photo otherwise). If
 Equalize is already installed, this installer hands the choice to Equalize's switch.
+The two control panels link to each other; brightness, quiet hours, the
+dimmer and the timer are set separately in each, and Equalize's control panel lists any that
+differ, with a button to copy these settings across. Set the panel's own settings once, here
+(`tools/panel_setting.py`): Equalize uses them.
 
 ### Controls (web UI)
 - **Now on the panel** — a live dashboard at the top: a snapshot preview of what's

@@ -63,6 +63,8 @@
                 padding:.8rem .6rem; }
     .logo-btn img { width:72px; height:72px; }
     .logo-btn.active { outline:2px solid var(--accent); background:#1f3326; }
+    .other-panel { margin-left:auto; color:var(--fg); font-size:.85rem; font-weight:600; text-underline-offset:3px; }
+    .pill a { color:var(--fg); }
   </style>
 </head>
 <body>
@@ -70,6 +72,7 @@
   <div class="brand">
     <img src="/logo/{{ s.logo }}/small.png" alt="">
     <h1>spotipi <small>{{ photo_count }} photo(s) &middot; mode: {{ s.mode }}</small></h1>
+    {% if dash.equalize.installed %}<a class="other-panel" href="{{ dash.equalize.url }}">Equalize &rarr;</a>{% endif %}
   </div>
 
   {% if notice %}<div class="card" style="border-color:#2e7d5b;background:#12291f">
@@ -111,6 +114,12 @@
         class="mode-btn mode-spotify {{ 'active' if s.mode=='spotify' else '' }}" style="width:100%">Spotify only</button></form>
     </div>
     <p class="pill" style="margin-top:.7rem">On (auto): shows Spotify art while music plays, photos otherwise.</p>
+    {% if dash.equalize.installed %}
+    <p class="pill">Equalize shares this panel: while music plays to it over AirPlay, it has the
+      panel and these settings wait. Who gets the panel, and when, is set in
+      <a href="{{ dash.equalize.url }}">Equalize's control panel</a> (Sharing). Brightness, quiet
+      hours, the dimmer and the timer are set separately in each; Equalize lists any that differ.</p>
+    {% endif %}
   </div>
 
   <!-- BRIGHTNESS -->
@@ -355,8 +364,9 @@
       const st = d.status || {};
       $('dash_now').textContent = nowLine(st);
       $('dash_dot').className = 'dot' + (d.alive ? '' : ' dead');
-      $('dash_state').textContent = d.alive
-        ? ('mode: ' + (d.state ? d.state.mode : '?') + ' · showing: ' + (st.effective || '—'))
+      const eq = d.equalize || {};
+      $('dash_state').textContent = eq.active ? 'Equalize has the panel while music plays'
+        : d.alive ? ('mode: ' + (d.state ? d.state.mode : '?') + ' · showing: ' + (st.effective || '—'))
         : 'display daemon not responding';
       $('st_photos').textContent = d.photo_count;
       $('st_bright').textContent = (st.brightness != null ? st.brightness : '–');
